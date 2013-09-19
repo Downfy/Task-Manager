@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- spring integration flow -->
+	<int:gateway id="messageGateway" default-request-channel="task-messages-request"
+		service-interface="com.downfy.service.MessageGateway" />
+
+	<int:channel id="task-messages-request" />
+
+	<!-- To send AMQP Messages to an Exchange, configure an outbound-channel-adapter. -->
+	<int-amqp:outbound-channel-adapter
+		channel="task-messages-request" exchange-name="task-messages"
+		routing-key-expression="'task.'+payload.getAction()" amqp-template="amqpTemplate" />
+
+	<!-- rabbit exchanges, queues, and bindings used by this app -->
+	<rabbit:topic-exchange name="task-messages"
+		auto-delete="false" durable="true">
+		<rabbit:bindings>
+			<rabbit:binding queue="task-messages-amazon-category"
+				pattern="task.amazon-category" />
+			<rabbit:binding queue="task-messages-amazon-item"
+				pattern="task.amazon-item" />
+			<rabbit:binding queue="task-messages-all" pattern="task.*" />
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+
+	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
+	<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory" />
+
+	<!-- Request that queues, exchanges and bindings be automatically declared 
+		on the broker: -->
+	<rabbit:admin connection-factory="rabbitConnectionFactory" />
+
+	<bean id="rabbitConnectionFactory"
+		class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+		<constructor-arg value="localhost" />
+	</bean>
+
+	<rabbit:queue name="task-messages-amazon-category"
+		auto-delete="false" durable="true" />
+	<rabbit:queue name="task-messages-amazon-item"
+		auto-delete="false" durable="true" />
+	<rabbit:queue name="task-messages-all" auto-delete="false"
+		durable="true" />
+
+</beans>

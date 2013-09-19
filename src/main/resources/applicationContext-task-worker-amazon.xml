@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.2.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="amazonCategoryWorker" class="com.downfy.service.impl.AmazonCategoryWorker" />
+
+	<int-amqp:inbound-channel-adapter
+		channel="task-messages-amazon-category-channel" queue-names="task-messages-amazon-category"
+		connection-factory="rabbitConnectionFactory" />
+
+	<int:channel id="task-messages-amazon-category-channel" />
+
+	<int:service-activator input-channel="task-messages-amazon-category-channel"
+		ref="amazonCategoryWorker" method="process" />
+
+	<int-amqp:inbound-channel-adapter
+		channel="task-messages-amazon-item-channel" queue-names="task-messages-amazon-item"
+		connection-factory="rabbitConnectionFactory" />
+
+	<int:channel id="task-messages-amazon-item-channel" />
+
+	<int:service-activator input-channel="task-messages-amazon-item-channel"
+		ref="amazonCategoryWorker" method="process" />
+</beans>
