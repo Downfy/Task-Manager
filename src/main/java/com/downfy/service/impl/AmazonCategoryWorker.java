@@ -29,6 +29,6 @@ public class AmazonCategoryWorker {
 	private static Log logger = LogFactory.getLog(AmazonCategoryWorker.class);
 
 	public void process(MessageTask request) throws Exception {
-		logger.debug("### PAYLOAD ### User category " + request);
+		logger.debug("### PAYLOAD ### User acion " + request);
 	}
 }

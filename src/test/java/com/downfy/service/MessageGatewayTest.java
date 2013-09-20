@@ -29,6 +29,7 @@ import com.downfy.domain.MessageTask;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:applicationContext-task-queue.xml",
+		"classpath:applicationContext-task-schedule.xml",
 		"classpath:applicationContext-task-worker-amazon.xml",
 		"classpath:applicationContext-task-worker-logging.xml" })
 public class MessageGatewayTest {
@@ -41,8 +42,10 @@ public class MessageGatewayTest {
 		MessageTask message = new MessageTask();
 		message.setAction("amazon-category");
 		message.setItem("category");
-		message.setMessage("1000");
-		gateway.sendMessage(message);
+		for (int i = 0; i < 50; i++) {
+			message.setMessage(i + "");
+			gateway.sendMessage(message);
+		}
 	}
 
 	@Test
@@ -50,7 +53,9 @@ public class MessageGatewayTest {
 		MessageTask message = new MessageTask();
 		message.setAction("amazon-item");
 		message.setItem("item");
-		message.setMessage("1000");
-		gateway.sendMessage(message);
+		for (int i = 0; i < 50; i++) {
+			message.setMessage(i + "");
+			gateway.sendMessage(message);
+		}
 	}
 }

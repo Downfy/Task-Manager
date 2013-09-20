@@ -29,6 +29,6 @@ public class LoggingWorker {
 	private static Log logger = LogFactory.getLog(LoggingWorker.class);
 
 	public void process(MessageTask request) throws Exception {
-		logger.debug("### LOGGING ### User category " + request);
+		logger.debug("### LOGGING ### User action " + request);
 	}
 }

@@ -12,6 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.batch.version>2.2.0.RELEASE</spring.batch.version>
     </properties>
     <repositories>
         <repository>
@@ -93,5 +94,17 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+        
+        <!-- Spring Batch dependencies -->
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-core</artifactId>
+			<version>${spring.batch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-infrastructure</artifactId>
+			<version>${spring.batch.version}</version>
+		</dependency>
     </dependencies>
 </project>

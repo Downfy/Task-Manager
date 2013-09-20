@@ -20,8 +20,7 @@
 		routing-key-expression="'task.'+payload.getAction()" amqp-template="amqpTemplate" />
 
 	<!-- rabbit exchanges, queues, and bindings used by this app -->
-	<rabbit:topic-exchange name="task-messages"
-		auto-delete="false" durable="true">
+	<rabbit:topic-exchange name="task-messages">
 		<rabbit:bindings>
 			<rabbit:binding queue="task-messages-amazon-category"
 				pattern="task.amazon-category" />
@@ -31,23 +30,14 @@
 		</rabbit:bindings>
 	</rabbit:topic-exchange>
 
-	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
+	<rabbit:connection-factory id="rabbitConnectionFactory" />
+
 	<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory" />
 
-	<!-- Request that queues, exchanges and bindings be automatically declared 
-		on the broker: -->
 	<rabbit:admin connection-factory="rabbitConnectionFactory" />
 
-	<bean id="rabbitConnectionFactory"
-		class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
-		<constructor-arg value="localhost" />
-	</bean>
-
-	<rabbit:queue name="task-messages-amazon-category"
-		auto-delete="false" durable="true" />
-	<rabbit:queue name="task-messages-amazon-item"
-		auto-delete="false" durable="true" />
-	<rabbit:queue name="task-messages-all" auto-delete="false"
-		durable="true" />
+	<rabbit:queue name="task-messages-amazon-category" />
+	<rabbit:queue name="task-messages-amazon-item" />
+	<rabbit:queue name="task-messages-all" />
 
 </beans>
