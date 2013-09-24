@@ -18,10 +18,10 @@ package com.downfy.service;
 import com.downfy.domain.MessageTask;
 
 /**
- *
+ * 
  * @author Tran Anh Tuan <tk1cntt@gmail.com>
  */
 public interface MessageGateway {
 
-    public void sendMessage(MessageTask task);
+	public void sendMessage(MessageTask task);
 }
